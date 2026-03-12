@@ -19,7 +19,7 @@ print("Keep this key secure and use it for all API requests")
 
 # Database setup
 def get_db():
-    conn = sqlite3.connect("dashkit.db")
+    conn = sqlite3.connect("dashkit.db", check_same_thread=False)
     conn.row_factory = sqlite3.Row
     try:
         yield conn
@@ -111,10 +111,10 @@ async def get_components(db = Depends(get_db)):
 # Frontend
 @app.get("/", response_class=HTMLResponse)
 async def dashboard():
-    with open("frontend/index.html", "r") as f:
+    with open("../frontend/index.html", "r", encoding="utf-8") as f:
         return f.read()
 
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
+app.mount("/static", StaticFiles(directory="../frontend"), name="static")
 
 if __name__ == "__main__":
     import uvicorn
