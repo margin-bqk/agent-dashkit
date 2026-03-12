@@ -1,0 +1,24 @@
+# Environment variables
+.env
+.env.local
+
+# Database
+*.db
+*.sqlite3
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+
+# Logs
+*.log
+logs/
+
+# Node modules (if any frontend builds later)
+node_modules/
