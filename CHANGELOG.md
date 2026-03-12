@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-03-12
+
+### Added
+- **Component width control**: Support for 1/2/3 column span via `span` field
+- **Extended component types**:
+  - `timer`: Count-up timer with gradient text effect
+  - `markdown`: Markdown renderer with headers, code, lists support
+  - `iframe`: Embedded iframe for external content
+  - `calendar`: Simple calendar display
+- **Empty state design**: Friendly welcome message when no components exist
+- **Component type icons**: Visual icons for each component type
+- **Fade-in animations**: Smooth loading animations for components
+- **Responsive grid**: Auto-adjust for mobile devices
+
+### Changed
+- Improved UI design with gradients and hover effects
+- Added component header with type icons
+
+---
+
 ## [0.2.0] - 2026-03-12
 
 ### Added

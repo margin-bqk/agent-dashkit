@@ -9,19 +9,57 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     <style>
+        /* Component Card Styles */
         .component-card {
             background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .component-card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Span-based column widths */
+        .col-span-1 {
+            grid-column: span 1;
+        }
+
+        .col-span-2 {
+            grid-column: span 2;
+        }
+
+        .col-span-3 {
+            grid-column: span 3;
+        }
+
+        @media (max-width: 768px) {
+
+            .col-span-2,
+            .col-span-3 {
+                grid-column: span 1;
+            }
+        }
+
+        /* Progress Bar */
         .progress-bar {
-            height: 0.5rem;
+            height: 0.75rem;
             border-radius: 9999px;
             background-color: #e5e7eb;
             overflow: hidden;
@@ -29,8 +67,160 @@
 
         .progress-fill {
             height: 100%;
-            background-color: #3b82f6;
-            transition: all 0.5s;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Timer Component */
+        .timer-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Markdown Content */
+        .markdown-content {
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        .markdown-content h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .markdown-content h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0.875rem 0 0.5rem;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 0.75rem 0 0.5rem;
+        }
+
+        .markdown-content p {
+            margin: 0.5rem 0;
+        }
+
+        .markdown-content code {
+            background: #f3f4f6;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+
+        .markdown-content pre {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .markdown-content pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .markdown-content li {
+            margin: 0.25rem 0;
+        }
+
+        /* Component Type Icons */
+        .component-type-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+        }
+
+        .icon-progress {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .icon-task_list {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .icon-text {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .icon-chart {
+            background: #fce7f3;
+            color: #db2777;
+        }
+
+        .icon-table {
+            background: #e0e7ff;
+            color: #4f46e5;
+        }
+
+        .icon-timer {
+            background: #fed7aa;
+            color: #ea580c;
+        }
+
+        .icon-markdown {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .icon-iframe {
+            background: #cffafe;
+            color: #0891b2;
+        }
+
+        .icon-calendar {
+            background: #fce7f3;
+            color: #be185d;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            max-width: 400px;
+            margin: 0 auto 1.5rem;
         }
     </style>
 </head>
@@ -54,8 +244,20 @@
         </div>
     </div>
 
+    <!-- Empty State -->
+    <div x-show="authenticated && components.length === 0" class="empty-state">
+        <div class="empty-state-icon">📊</div>
+        <h2>Welcome to Agent DashKit!</h2>
+        <p>Your dashboard is empty. Use the API to add components and start building your AI agent dashboard.</p>
+        <div class="text-sm bg-gray-100 p-4 rounded-lg text-left max-w-md mx-auto">
+            <p class="font-mono text-xs">curl -X POST http://localhost:8000/api/components \\\n -H "X-API-Key: YOUR_KEY"
+                \\\n -H "Content-Type: application/json" \\\n -d '{"type":"progress","title":"My
+                Progress","data":{"value":50}}'</p>
+        </div>
+    </div>
+
     <!-- Main Dashboard (shown when authenticated) -->
-    <div x-show="authenticated" class="container mx-auto px-4 py-8">
+    <div x-show="authenticated && components.length > 0" class="container mx-auto px-4 py-8">
         <header class="mb-8 flex justify-between items-start">
             <div>
                 <h1 class="text-4xl font-bold text-gray-800 mb-2">🤖 Agent DashKit</h1>
@@ -67,9 +269,27 @@
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="components">
-            <template x-for="component in components" :key="component.id">
-                <div class="component-card">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-3" x-text="component.title"></h3>
+            <template x-for="(component, index) in components" :key="component.id">
+                <div class="component-card" :class="{
+                        'col-span-1': component.span === 1 || !component.span,
+                        'col-span-2': component.span === 2,
+                        'col-span-3': component.span === 3
+                    }" :style="'animation-delay: ' + (index * 0.1) + 's'">
+                    <!-- Component Header with Type Icon -->
+                    <div class="flex items-center mb-3">
+                        <span class="component-type-icon" :class="'icon-' + component.type" x-text="{
+                                'progress': '📊',
+                                'task_list': '✅',
+                                'text': '📝',
+                                'chart': '📈',
+                                'table': '📋',
+                                'timer': '⏱️',
+                                'markdown': '📄',
+                                'iframe': '🔗',
+                                'calendar': '📅'
+                            }[component.type] || '📦'"></span>
+                        <h3 class="text-lg font-semibold text-gray-800" x-text="component.title"></h3>
+                    </div>
 
                     <!-- Progress Component -->
                     <div x-if="component.type === 'progress'">
@@ -113,15 +333,15 @@
                                 <thead class="text-xs uppercase bg-gray-50">
                                     <tr>
                                         <template x-for="header in component.data.headers" :key="header">
-                                            <th class="px-2 py-1" x-text="header"></th>
+                                            <th class="px-3 py-2" x-text="header"></th>
                                         </template>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <template x-for="(row, index) in component.data.rows" :key="index">
-                                        <tr class="border-b">
+                                        <tr class="border-b hover:bg-gray-50">
                                             <template x-for="cell in row" :key="cell">
-                                                <td class="px-2 py-1" x-text="cell"></td>
+                                                <td class="px-3 py-2" x-text="cell"></td>
                                             </template>
                                         </tr>
                                     </template>
@@ -130,8 +350,48 @@
                         </div>
                     </div>
 
-                    <div class="mt-3 text-xs text-gray-400">
-                        Updated: <span x-text="new Date(component.updated_at).toLocaleString()"></span>
+                    <!-- Timer Component (Count-up) -->
+                    <div x-if="component.type === 'timer'" class="text-center py-4">
+                        <div class="timer-value" :data-value="component.data.value"
+                            x-text="component.data.value || '0'"></div>
+                        <div class="text-sm text-gray-500 mt-2" x-text="component.data.label || 'Count'"></div>
+                    </div>
+
+                    <!-- Markdown Component -->
+                    <div x-if="component.type === 'markdown'" class="markdown-content"
+                        x-html="renderMarkdown(component.data.content)"></div>
+
+                    <!-- iFrame Component -->
+                    <div x-if="component.type === 'iframe'" class="aspect-video">
+                        <iframe :src="component.data.url" class="w-full h-full rounded" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    </div>
+
+                    <!-- Calendar Component -->
+                    <div x-if="component.type === 'calendar'">
+                        <div class="text-center font-semibold mb-2"
+                            x-text="component.data.month || new Date().toLocaleString('default', { month: 'long', year: 'numeric' })">
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center text-xs">
+                            <template x-for="day in ['S','M','T','W','T','F','S']">
+                                <div class="text-gray-400 py-1" x-text="day"></div>
+                            </template>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center text-sm mt-1">
+                            <template
+                                x-for="(day, index) in (component.data.days || Array.from({length: 30}, (_, i) => i + 1))"
+                                :key="index">
+                                <div class="py-1 rounded"
+                                    :class="component.data.highlighted?.includes(day) ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600'"
+                                    x-text="day"></div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 text-xs text-gray-400 flex justify-between items-center">
+                        <span>Updated: <span x-text="new Date(component.updated_at).toLocaleString()"></span></span>
+                        <span class="text-gray-300" x-text="'📐' + (component.span || 1)"></span>
                     </div>
                 </div>
             </template>
@@ -220,7 +480,56 @@
                             maintainAspectRatio: false
                         }
                     });
-                }
+                },
+
+                // Simple markdown to HTML converter
+                renderMarkdown(content) {
+                    if (!content) return '';
+                    let html = content
+                        // Headers
+                        .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                        .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                        .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+                        // Bold & Italic
+                        .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                        // Code blocks
+                        .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+                        // Inline code
+                        .replace(/`([^`]+)`/g, '<code>$1</code>')
+                        // Links
+                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 hover:underline">$1</a>')
+                        // Lists
+                        .replace(/^\* (.*$)/gm, '<li>$1</li>')
+                        .replace(/^- (.*$)/gm, '<li>$1</li>')
+                        .replace(/^\d+\. (.*$)/gm, '<li>$1</li>')
+                        // Paragraphs
+                        .replace(/\n\n/g, '</p><p>')
+                        .replace(/\n/g, '<br>');
+
+                    // Wrap list items
+                    html = html.replace(/(<li>.*<\/li>)+/g, '<ul>                renderChart(component) {
+                    const ctx = document.getElementById(`chart-${component.id}`);
+                    if (!ctx) return;
+
+                    // Destroy existing chart if exists
+                    if (this.charts[component.id]) {
+                        this.charts[component.id].destroy();
+                    }
+
+                    this.charts[component.id] = new Chart(ctx, {
+                        type: component.data.chartType || 'line',
+                        data: component.data.data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }</ul> ');
+
+            return '<p>' + html + '</p>';
+        }
             };
         }
     </script>

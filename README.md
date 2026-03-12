@@ -57,3 +57,28 @@ agent-dashkit/
 | `DASHKIT_PASSWORD` | Dashboard password (optional) | Empty (disabled) |
 | `DASHKIT_PORT` | Server port | 8000 |
 | `DASHKIT_DB_PATH` | SQLite database path | dashkit.db |
+
+## Component Types
+| Type | Description | Example Data |
+|------|-------------|--------------|
+| `progress` | Progress bar with percentage | `{"value": 80, "status": "In Progress"}` |
+| `task_list` | Checklist of tasks | `{"tasks": [{"name": "Task 1", "completed": true}]}` |
+| `text` | Free-form text card | `{"content": "Your text", "source": "optional"}` |
+| `chart` | Data visualization | `{"chartType": "line", "data": {...}}` |
+| `table` | Tabular data | `{"headers": ["Col1"], "rows": [["val"]]}` |
+| `timer` | Count-up timer | `{"value": 1234, "label": "Days"}` |
+| `markdown` | Markdown renderer | `{"content": "# Hello\n**bold**"}` |
+| `iframe` | Embedded content | `{"url": "https://example.com"}` |
+| `calendar` | Calendar display | `{"month": "March 2026", "days": [...], "highlighted": [1, 15]}` |
+
+## Span Control
+Components can span 1, 2, or 3 columns:
+```json
+POST /api/components
+{
+  "type": "chart",
+  "title": "Wide Chart",
+  "span": 2,
+  "data": {...}
+}
+```

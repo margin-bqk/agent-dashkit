@@ -53,11 +53,18 @@ with sqlite3.connect(DB_PATH) as conn:
             type TEXT NOT NULL,
             title TEXT NOT NULL,
             data TEXT NOT NULL,
+            span INTEGER DEFAULT 1,
             position INTEGER DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    # Add span column if not exists (for existing databases)
+    try:
+        conn.execute("ALTER TABLE components ADD COLUMN span INTEGER DEFAULT 1")
+    except:
+        pass  # Column already exists
+    
     # Create password_sessions table for web auth
     conn.execute("""
         CREATE TABLE IF NOT EXISTS password_sessions (
@@ -70,14 +77,16 @@ with sqlite3.connect(DB_PATH) as conn:
 
 # Models
 class ComponentCreate(BaseModel):
-    type: str  # progress, task_list, text, chart, table
+    type: str  # progress, task_list, text, chart, table, timer, markdown, iframe, calendar
     title: str
     data: Dict[str, Any]
+    span: Optional[int] = 1  # 1, 2, or 3 columns
     position: Optional[int] = 0
 
 class ComponentUpdate(BaseModel):
     title: Optional[str] = None
     data: Optional[Dict[str, Any]] = None
+    span: Optional[int] = None
     position: Optional[int] = None
 
 # Dependencies
@@ -172,9 +181,9 @@ async def auth_status(request: Request, db = Depends(get_db)):
 async def create_component(component: ComponentCreate, db = Depends(get_db)):
     component_id = str(uuid.uuid4())
     db.execute("""
-        INSERT INTO components (id, type, title, data, position)
-        VALUES (?, ?, ?, ?, ?)
-    """, (component_id, component.type, component.title, str(component.data), component.position))
+        INSERT INTO components (id, type, title, data, span, position)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (component_id, component.type, component.title, str(component.data), component.span, component.position))
     db.commit()
     
     return {"success": True, "component_id": component_id}
