@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,28 +10,67 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     <style>
         .component-card {
-            @apply bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
         }
+
+        .component-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
         .progress-bar {
-            @apply h-2 rounded-full bg-gray-200 overflow-hidden;
+            height: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e5e7eb;
+            overflow: hidden;
         }
+
         .progress-fill {
-            @apply h-full bg-blue-500 transition-all duration-500;
+            height: 100%;
+            background-color: #3b82f6;
+            transition: all 0.5s;
         }
     </style>
 </head>
+
 <body class="bg-gray-50 min-h-screen" x-data="dashboard()">
-    <div class="container mx-auto px-4 py-8">
-        <header class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">🤖 Agent DashKit</h1>
-            <p class="text-gray-600">AI agent-controlled dashboard, built with blocks</p>
+    <!-- Password Login Modal -->
+    <div x-show="!authenticated" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">🔒 Dashboard Locked</h2>
+            <p class="text-gray-600 mb-6">Please enter the dashboard password to continue.</p>
+            <form @submit.prevent="login()">
+                <input type="password" x-model="password" placeholder="Enter password"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"
+                    required>
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                    Unlock Dashboard
+                </button>
+            </form>
+            <p x-show="loginError" class="mt-4 text-red-600 text-center" x-text="loginError"></p>
+        </div>
+    </div>
+
+    <!-- Main Dashboard (shown when authenticated) -->
+    <div x-show="authenticated" class="container mx-auto px-4 py-8">
+        <header class="mb-8 flex justify-between items-start">
+            <div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">🤖 Agent DashKit</h1>
+                <p class="text-gray-600">AI agent-controlled dashboard, built with blocks</p>
+            </div>
+            <button x-show="passwordProtected" @click="logout()" class="text-sm text-gray-500 hover:text-gray-700">
+                🔒 Lock
+            </button>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="components">
             <template x-for="component in components" :key="component.id">
                 <div class="component-card">
                     <h3 class="text-lg font-semibold text-gray-800 mb-3" x-text="component.title"></h3>
-                    
+
                     <!-- Progress Component -->
                     <div x-if="component.type === 'progress'">
                         <div class="progress-bar">
@@ -48,7 +88,8 @@
                             <template x-for="(task, index) in component.data.tasks" :key="index">
                                 <li class="flex items-start">
                                     <span class="mr-2" x-text="task.completed ? '✅' : '⬜'"></span>
-                                    <span :class="task.completed ? 'line-through text-gray-400' : 'text-gray-700'" x-text="task.name"></span>
+                                    <span :class="task.completed ? 'line-through text-gray-400' : 'text-gray-700'"
+                                        x-text="task.name"></span>
                                 </li>
                             </template>
                         </ul>
@@ -102,16 +143,56 @@
             return {
                 components: [],
                 charts: {},
-                
+                authenticated: false,
+                password: '',
+                loginError: '',
+                passwordProtected: false,
+
                 async init() {
-                    await this.loadComponents();
-                    setInterval(() => this.loadComponents(), 30000); // Auto-refresh every 30s
+                    await this.checkAuth();
+                    if (this.authenticated) {
+                        await this.loadComponents();
+                        setInterval(() => this.loadComponents(), 30000); // Auto-refresh every 30s
+                    }
                 },
-                
+
+                async checkAuth() {
+                    const response = await fetch('/api/auth/status');
+                    const data = await response.json();
+                    this.passwordProtected = data.password_protected;
+                    this.authenticated = !data.password_protected || data.authenticated;
+                },
+
+                async logout() {
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                    this.authenticated = false;
+                    this.components = [];
+                },
+
+                async login() {
+                    this.loginError = '';
+                    const formData = new FormData();
+                    formData.append('password', this.password);
+
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        this.authenticated = true;
+                        this.password = '';
+                        await this.loadComponents();
+                    } else {
+                        const data = await response.json();
+                        this.loginError = data.detail || 'Invalid password';
+                    }
+                },
+
                 async loadComponents() {
                     const response = await fetch('/api/components');
                     this.components = await response.json();
-                    
+
                     // Render charts after components load
                     this.$nextTick(() => {
                         this.components.forEach(comp => {
@@ -121,16 +202,16 @@
                         });
                     });
                 },
-                
+
                 renderChart(component) {
                     const ctx = document.getElementById(`chart-${component.id}`);
                     if (!ctx) return;
-                    
+
                     // Destroy existing chart if exists
                     if (this.charts[component.id]) {
                         this.charts[component.id].destroy();
                     }
-                    
+
                     this.charts[component.id] = new Chart(ctx, {
                         type: component.data.chartType || 'line',
                         data: component.data.data,
@@ -140,8 +221,9 @@
                         }
                     });
                 }
-            }
+            };
         }
     </script>
 </body>
+
 </html>

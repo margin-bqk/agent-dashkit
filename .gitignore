@@ -22,3 +22,5 @@ logs/
 
 # Node modules (if any frontend builds later)
 node_modules/
+
+dev-docs/
