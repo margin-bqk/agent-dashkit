@@ -30,7 +30,7 @@ DB_PATH = os.getenv("DASHKIT_DB_PATH", "dashkit.db")
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
-print(f"Agent DashKit v1.0.0")
+print(f"Agent DashKit v0.2.0")
 print(f"API Key: {API_KEY}")
 print(f"Password Protection: {'Enabled' if DASHKIT_PASSWORD else 'Disabled'}")
 print(f"Server Port: {PORT}")
@@ -219,7 +219,7 @@ async def export_components(db = Depends(get_db)):
     """Export all components as JSON backup"""
     components = db.execute("SELECT * FROM components ORDER BY position, created_at").fetchall()
     result = {
-        "version": "1.0.0",
+        "version": "0.2.0",
         "exported_at": "",
         "components": []
     }
