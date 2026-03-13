@@ -243,6 +243,144 @@ async def export_components(db = Depends(get_db)):
     
     return result
 
+@app.get("/api/templates")
+async def get_templates():
+    """
+    Get predefined component templates for AI agents.
+    These templates provide sample data structures for common use cases.
+    """
+    return {
+        "templates": [
+            {
+                "id": "progress-default",
+                "type": "progress",
+                "title": "Project Progress",
+                "description": "Track project completion percentage",
+                "data": {"value": 0, "status": "Not Started"},
+                "span": 1
+            },
+            {
+                "id": "task-list-default",
+                "type": "task_list",
+                "title": "Task List",
+                "description": "Track multiple tasks with completion status",
+                "data": {"tasks": [
+                    {"name": "Task 1", "completed": False},
+                    {"name": "Task 2", "completed": False},
+                    {"name": "Task 3", "completed": False}
+                ]},
+                "span": 1
+            },
+            {
+                "id": "text-announcement",
+                "type": "text",
+                "title": "Announcement",
+                "description": "Display important announcements or notes",
+                "data": {"content": "Your announcement text here", "source": "Source name"},
+                "span": 1
+            },
+            {
+                "id": "chart-line-default",
+                "type": "chart",
+                "title": "Line Chart",
+                "description": "Display data as a line chart",
+                "data": {
+                    "chartType": "line",
+                    "data": {
+                        "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+                        "datasets": [{"label": "Data", "data": [12, 19, 3, 5, 2], "borderColor": "#3b82f6", "backgroundColor": "rgba(59, 130, 246, 0.1)"}]
+                    }
+                },
+                "span": 2
+            },
+            {
+                "id": "chart-bar-default",
+                "type": "chart",
+                "title": "Bar Chart",
+                "description": "Display data as a bar chart",
+                "data": {
+                    "chartType": "bar",
+                    "data": {
+                        "labels": ["A", "B", "C", "D"],
+                        "datasets": [{"label": "Values", "data": [10, 25, 15, 30], "backgroundColor": ["#3b82f6", "#8b5cf6", "#10b981", "#f59e0b"]}]
+                    }
+                },
+                "span": 2
+            },
+            {
+                "id": "chart-pie-default",
+                "type": "chart",
+                "title": "Pie Chart",
+                "description": "Display data as a pie chart",
+                "data": {
+                    "chartType": "pie",
+                    "data": {
+                        "labels": ["Category A", "Category B", "Category C"],
+                        "datasets": [{"data": [30, 50, 20], "backgroundColor": ["#3b82f6", "#8b5cf6", "#10b981"]}]
+                    }
+                },
+                "span": 1
+            },
+            {
+                "id": "table-simple",
+                "type": "table",
+                "title": "Data Table",
+                "description": "Display tabular data",
+                "data": {
+                    "headers": ["Column 1", "Column 2", "Column 3"],
+                    "rows": [["Row 1 Col 1", "Row 1 Col 2", "Row 1 Col 3"], ["Row 2 Col 1", "Row 2 Col 2", "Row 2 Col 3"]]
+                },
+                "span": 2
+            },
+            {
+                "id": "timer-counter",
+                "type": "timer",
+                "title": "Counter",
+                "description": "Display a count-up number",
+                "data": {"value": 0, "label": "Count"},
+                "span": 1
+            },
+            {
+                "id": "timer-days",
+                "type": "timer",
+                "title": "Days Counter",
+                "description": "Count days since a start date",
+                "data": {"value": 0, "label": "Days"},
+                "span": 1
+            },
+            {
+                "id": "markdown-readme",
+                "type": "markdown",
+                "title": "README",
+                "description": "Render markdown content",
+                "data": {
+                    "content": "# Welcome\n\nThis is **bold** and *italic* text.\n\n- List item 1\n- List item 2\n\n```python\nprint('Hello world')\n```"
+                },
+                "span": 2
+            },
+            {
+                "id": "iframe-website",
+                "type": "iframe",
+                "title": "External Website",
+                "description": "Embed an external website",
+                "data": {"url": "https://example.com"},
+                "span": 2
+            },
+            {
+                "id": "calendar-month",
+                "type": "calendar",
+                "title": "Calendar",
+                "description": "Display a monthly calendar",
+                "data": {
+                    "month": "March 2026",
+                    "days": list(range(1, 32)),
+                    "highlighted": [1, 15]
+                },
+                "span": 2
+            }
+        ]
+    }
+
 # Frontend
 @app.get("/", response_class=HTMLResponse)
 async def dashboard():

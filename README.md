@@ -46,6 +46,7 @@ agent-dashkit/
 | PUT | `/api/components/{id}` | Update a component |
 | DELETE | `/api/components/{id}` | Delete a component |
 | GET | `/api/export` | Export all components as JSON |
+| GET | `/api/templates` | Get predefined component templates |
 | POST | `/api/auth/login` | Authenticate dashboard password |
 | POST | `/api/auth/logout` | Logout from dashboard |
 | GET | `/api/auth/status` | Check authentication status |
