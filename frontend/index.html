@@ -9,7 +9,6 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     <style>
-        /* Component Card Styles */
         .component-card {
             background-color: white;
             border-radius: 0.75rem;
@@ -36,7 +35,6 @@
             }
         }
 
-        /* Span-based column widths */
         .col-span-1 {
             grid-column: span 1;
         }
@@ -57,7 +55,6 @@
             }
         }
 
-        /* Progress Bar */
         .progress-bar {
             height: 0.75rem;
             border-radius: 9999px;
@@ -71,7 +68,6 @@
             transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Timer Component */
         .timer-value {
             font-size: 2.5rem;
             font-weight: 700;
@@ -81,7 +77,6 @@
             background-clip: text;
         }
 
-        /* Markdown Content */
         .markdown-content {
             line-height: 1.7;
             color: #374151;
@@ -141,7 +136,6 @@
             margin: 0.25rem 0;
         }
 
-        /* Component Type Icons */
         .component-type-icon {
             display: inline-flex;
             align-items: center;
@@ -198,7 +192,6 @@
             color: #be185d;
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -236,9 +229,8 @@
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"
                     required>
                 <button type="submit"
-                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
-                    Unlock Dashboard
-                </button>
+                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">Unlock
+                    Dashboard</button>
             </form>
             <p x-show="loginError" class="mt-4 text-red-600 text-center" x-text="loginError"></p>
         </div>
@@ -248,64 +240,50 @@
     <div x-show="authenticated && components.length === 0" class="empty-state">
         <div class="empty-state-icon">📊</div>
         <h2>Welcome to Agent DashKit!</h2>
-        <p>Your dashboard is empty. Use the API to add components and start building your AI agent dashboard.</p>
+        <p>Your dashboard is empty. Use the API to add components.</p>
         <div class="text-sm bg-gray-100 p-4 rounded-lg text-left max-w-md mx-auto">
-            <p class="font-mono text-xs">curl -X POST http://localhost:8000/api/components \\\n -H "X-API-Key: YOUR_KEY"
-                \\\n -H "Content-Type: application/json" \\\n -d '{"type":"progress","title":"My
-                Progress","data":{"value":50}}'</p>
+            <p class="font-mono text-xs">curl -X POST http://localhost:8000/api/components -H "X-API-Key: YOUR_KEY" -H
+                "Content-Type: application/json" -d '{"type":"progress","title":"My Progress","data":{"value":50}}'</p>
         </div>
     </div>
 
-    <!-- Main Dashboard (shown when authenticated) -->
+    <!-- Main Dashboard -->
     <div x-show="authenticated && components.length > 0" class="container mx-auto px-4 py-8">
         <header class="mb-8 flex justify-between items-start">
             <div>
                 <h1 class="text-4xl font-bold text-gray-800 mb-2">🤖 Agent DashKit</h1>
-                <p class="text-gray-600">AI agent-controlled dashboard, built with blocks</p>
+                <p class="text-gray-600">AI agent-controlled dashboard</p>
             </div>
-            <button x-show="passwordProtected" @click="logout()" class="text-sm text-gray-500 hover:text-gray-700">
-                🔒 Lock
-            </button>
+            <button x-show="passwordProtected" @click="logout()" class="text-sm text-gray-500 hover:text-gray-700">🔒
+                Lock</button>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="components">
             <template x-for="(component, index) in components" :key="component.id">
-                <div class="component-card" :class="{
-                        'col-span-1': component.span === 1 || !component.span,
-                        'col-span-2': component.span === 2,
-                        'col-span-3': component.span === 3
-                    }" :style="'animation-delay: ' + (index * 0.1) + 's'">
-                    <!-- Component Header with Type Icon -->
+                <div class="component-card"
+                    :class="{'col-span-1': component.span === 1 || !component.span, 'col-span-2': component.span === 2, 'col-span-3': component.span === 3}"
+                    :style="'animation-delay: ' + (index * 0.1) + 's'">
                     <div class="flex items-center mb-3">
-                        <span class="component-type-icon" :class="'icon-' + component.type" x-text="{
-                                'progress': '📊',
-                                'task_list': '✅',
-                                'text': '📝',
-                                'chart': '📈',
-                                'table': '📋',
-                                'timer': '⏱️',
-                                'markdown': '📄',
-                                'iframe': '🔗',
-                                'calendar': '📅'
-                            }[component.type] || '📦'"></span>
+                        <span class="component-type-icon" :class="'icon-' + component.type"
+                            x-text="{'progress':'📊','task_list':'✅','text':'📝','chart':'📈','table':'📋','timer':'⏱️','markdown':'📄','iframe':'🔗','calendar':'📅'}[component.type] || '📦'"></span>
                         <h3 class="text-lg font-semibold text-gray-800" x-text="component.title"></h3>
                     </div>
 
-                    <!-- Progress Component -->
+                    <!-- Progress -->
                     <div x-if="component.type === 'progress'">
                         <div class="progress-bar">
-                            <div class="progress-fill" :style="`width: ${component.data.value}%`"></div>
+                            <div class="progress-fill" :style="'width: ' + component.data.value + '%'"></div>
                         </div>
                         <div class="flex justify-between mt-2 text-sm text-gray-600">
-                            <span x-text="`${component.data.value}%`"></span>
+                            <span x-text="component.data.value + '%'"></span>
                             <span x-text="component.data.status || 'In Progress'"></span>
                         </div>
                     </div>
 
-                    <!-- Task List Component -->
+                    <!-- Task List -->
                     <div x-if="component.type === 'task_list'">
                         <ul class="space-y-2">
-                            <template x-for="(task, index) in component.data.tasks" :key="index">
+                            <template x-for="(task, idx) in component.data.tasks" :key="idx">
                                 <li class="flex items-start">
                                     <span class="mr-2" x-text="task.completed ? '✅' : '⬜'"></span>
                                     <span :class="task.completed ? 'line-through text-gray-400' : 'text-gray-700'"
@@ -315,18 +293,18 @@
                         </ul>
                     </div>
 
-                    <!-- Text Card Component -->
+                    <!-- Text -->
                     <div x-if="component.type === 'text'">
                         <p class="text-gray-700 whitespace-pre-line" x-text="component.data.content"></p>
                         <div class="mt-2 text-xs text-gray-400" x-text="component.data.source || ''"></div>
                     </div>
 
-                    <!-- Chart Component -->
+                    <!-- Chart -->
                     <div x-if="component.type === 'chart'">
-                        <canvas :id="`chart-${component.id}`" height="200"></canvas>
+                        <canvas :id="'chart-' + component.id" height="200"></canvas>
                     </div>
 
-                    <!-- Table Component -->
+                    <!-- Table -->
                     <div x-if="component.type === 'table'">
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left">
@@ -338,7 +316,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template x-for="(row, index) in component.data.rows" :key="index">
+                                    <template x-for="(row, idx) in component.data.rows" :key="idx">
                                         <tr class="border-b hover:bg-gray-50">
                                             <template x-for="cell in row" :key="cell">
                                                 <td class="px-3 py-2" x-text="cell"></td>
@@ -350,40 +328,35 @@
                         </div>
                     </div>
 
-                    <!-- Timer Component (Count-up) -->
+                    <!-- Timer -->
                     <div x-if="component.type === 'timer'" class="text-center py-4">
-                        <div class="timer-value" :data-value="component.data.value"
-                            x-text="component.data.value || '0'"></div>
+                        <div class="timer-value" x-text="component.data.value || '0'"></div>
                         <div class="text-sm text-gray-500 mt-2" x-text="component.data.label || 'Count'"></div>
                     </div>
 
-                    <!-- Markdown Component -->
+                    <!-- Markdown -->
                     <div x-if="component.type === 'markdown'" class="markdown-content"
                         x-html="renderMarkdown(component.data.content)"></div>
 
-                    <!-- iFrame Component -->
+                    <!-- iFrame -->
                     <div x-if="component.type === 'iframe'" class="aspect-video">
                         <iframe :src="component.data.url" class="w-full h-full rounded" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen></iframe>
                     </div>
 
-                    <!-- Calendar Component -->
+                    <!-- Calendar -->
                     <div x-if="component.type === 'calendar'">
-                        <div class="text-center font-semibold mb-2"
-                            x-text="component.data.month || new Date().toLocaleString('default', { month: 'long', year: 'numeric' })">
-                        </div>
+                        <div class="text-center font-semibold mb-2" x-text="component.data.month || 'Calendar'"></div>
                         <div class="grid grid-cols-7 gap-1 text-center text-xs">
                             <template x-for="day in ['S','M','T','W','T','F','S']">
                                 <div class="text-gray-400 py-1" x-text="day"></div>
                             </template>
                         </div>
                         <div class="grid grid-cols-7 gap-1 text-center text-sm mt-1">
-                            <template
-                                x-for="(day, index) in (component.data.days || Array.from({length: 30}, (_, i) => i + 1))"
-                                :key="index">
+                            <template x-for="(day, idx) in (component.data.days || Array.from({length:30},(_,i)=>i+1))"
+                                :key="idx">
                                 <div class="py-1 rounded"
-                                    :class="component.data.highlighted?.includes(day) ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600'"
+                                    :class="component.data.highlighted && component.data.highlighted.includes(day) ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600'"
                                     x-text="day"></div>
                             </template>
                         </div>
@@ -391,7 +364,7 @@
 
                     <div class="mt-3 text-xs text-gray-400 flex justify-between items-center">
                         <span>Updated: <span x-text="new Date(component.updated_at).toLocaleString()"></span></span>
-                        <span class="text-gray-300" x-text="'📐' + (component.span || 1)"></span>
+                        <span x-text="'📐' + (component.span || 1)"></span>
                     </div>
                 </div>
             </template>
@@ -412,7 +385,7 @@
                     await this.checkAuth();
                     if (this.authenticated) {
                         await this.loadComponents();
-                        setInterval(() => this.loadComponents(), 30000); // Auto-refresh every 30s
+                        setInterval(() => this.loadComponents(), 30000);
                     }
                 },
 
@@ -433,12 +406,7 @@
                     this.loginError = '';
                     const formData = new FormData();
                     formData.append('password', this.password);
-
-                    const response = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        body: formData
-                    });
-
+                    const response = await fetch('/api/auth/login', { method: 'POST', body: formData });
                     if (response.ok) {
                         this.authenticated = true;
                         this.password = '';
@@ -452,84 +420,39 @@
                 async loadComponents() {
                     const response = await fetch('/api/components');
                     this.components = await response.json();
-
-                    // Render charts after components load
                     this.$nextTick(() => {
                         this.components.forEach(comp => {
-                            if (comp.type === 'chart') {
-                                this.renderChart(comp);
-                            }
+                            if (comp.type === 'chart') this.renderChart(comp);
                         });
                     });
                 },
 
                 renderChart(component) {
-                    const ctx = document.getElementById(`chart-${component.id}`);
+                    const ctx = document.getElementById('chart-' + component.id);
                     if (!ctx) return;
-
-                    // Destroy existing chart if exists
-                    if (this.charts[component.id]) {
-                        this.charts[component.id].destroy();
-                    }
-
+                    if (this.charts[component.id]) this.charts[component.id].destroy();
                     this.charts[component.id] = new Chart(ctx, {
                         type: component.data.chartType || 'line',
                         data: component.data.data,
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }
+                        options: { responsive: true, maintainAspectRatio: false }
                     });
                 },
 
-                // Simple markdown to HTML converter
                 renderMarkdown(content) {
                     if (!content) return '';
                     let html = content
-                        // Headers
                         .replace(/^### (.*$)/gm, '<h3>$1</h3>')
                         .replace(/^## (.*$)/gm, '<h2>$1</h2>')
                         .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-                        // Bold & Italic
-                        .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
                         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                         .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                        // Code blocks
-                        .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
-                        // Inline code
                         .replace(/`([^`]+)`/g, '<code>$1</code>')
-                        // Links
                         .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 hover:underline">$1</a>')
-                        // Lists
                         .replace(/^\* (.*$)/gm, '<li>$1</li>')
                         .replace(/^- (.*$)/gm, '<li>$1</li>')
-                        .replace(/^\d+\. (.*$)/gm, '<li>$1</li>')
-                        // Paragraphs
-                        .replace(/\n\n/g, '</p><p>')
                         .replace(/\n/g, '<br>');
-
-                    // Wrap list items
-                    html = html.replace(/(<li>.*<\/li>)+/g, '<ul>                renderChart(component) {
-                    const ctx = document.getElementById(`chart-${component.id}`);
-                    if (!ctx) return;
-
-                    // Destroy existing chart if exists
-                    if (this.charts[component.id]) {
-                        this.charts[component.id].destroy();
-                    }
-
-                    this.charts[component.id] = new Chart(ctx, {
-                        type: component.data.chartType || 'line',
-                        data: component.data.data,
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }
-                    });
-                }</ul> ');
-
-            return '<p>' + html + '</p>';
-        }
+                    return '<p>' + html + '</p>';
+                }
             };
         }
     </script>
